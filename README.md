@@ -52,8 +52,8 @@ Aqui estão as tasks com mais detalhes:
      - Integrar os filtros ao backend e exibir os resultados no feed.
 
    - **Task 3.3: Componente de Anúncio**
-     - Desenvolver o componente de card do anúncio contendo imagem, título, preço/troca, e uma breve descrição.
-     - Implementar a navegação para a tela de detalhes do anúncio ao clicar no card.
+     - Desenvolver o componente de card do anúncio contendo imagem, título, preço/troca, e uma breve descrição. (Pedro Andrade)
+     - Implementar a navegação para a tela de detalhes do anúncio ao clicar no card. (Pedro Andrade)
      - Adicionar suporte a diferentes estados de exibição, como "vendido", "disponível para troca", etc.
 
 ### 4. **Detalhes do Anúncio**
