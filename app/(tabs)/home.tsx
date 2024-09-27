@@ -63,7 +63,7 @@ export default function Home() {
           },
         ]);
         setLoading(false);
-      }, 10000); // Simulando um delay
+      }, 10);
     };
 
     fetchAds();
