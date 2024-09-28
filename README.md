@@ -87,6 +87,8 @@ Aqui estão as tasks com mais detalhes:
 
 ### 5. **Adicionar Produto**
 
+## **(Enzo Cambras)**
+
 - **Task 5.1: UI da Tela de Adicionar Produto**
 
   - Criar o formulário com campos para upload de foto, título, descrição, preço/troca, link para WhatsApp, horários de atendimento, e endereço.
