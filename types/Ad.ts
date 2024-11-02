@@ -4,4 +4,5 @@ export interface Ad {
   title: string;
   price: string;
   description: string;
+  city: string;
 }

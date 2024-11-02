@@ -49,7 +49,7 @@ export const HeaderButton = ({ onSelectCity }: HeaderButtonProps) => {
             ) : (
               <FlatList
                 data={cities}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.name}
                 renderItem={({ item }) => (
                   <Pressable
                     onPress={() => handleCityPress(item.name)}

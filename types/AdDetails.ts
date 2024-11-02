@@ -6,4 +6,5 @@ export interface AdDetails {
   description: string;
   latitude: string;
   longitude: string;
+  city: string;
 }

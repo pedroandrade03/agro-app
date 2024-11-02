@@ -116,7 +116,6 @@ export default function AddProduct() {
 
   return (
     <>
-      <Stack.Screen options={{ title: 'Adicionar Produto' }} />
       <ScrollView className="flex-1 bg-gray-100 p-6">
         <TouchableOpacity
           onPress={pickImage}

@@ -38,6 +38,7 @@ export default function Home() {
           title={item.title}
           price={item.price}
           description={item.description}
+          city={item.city}
         />
       )}
       ListEmptyComponent={<Text>Nenhum anúncio disponível</Text>}
