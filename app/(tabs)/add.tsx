@@ -1,9 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, Alert, Switch } from 'react-native';
-import { Stack } from 'expo-router';
-import { useForm, Controller } from 'react-hook-form';
-import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
+import * as ImagePicker from 'expo-image-picker';
+import { Stack } from 'expo-router';
+import React, { useState, useEffect } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Alert,
+  Switch,
+} from 'react-native';
 
 type FormData = {
   title: string;
@@ -33,7 +42,8 @@ const formatWhatsApp = (value: string) => {
   const numericValue = value.replace(/\D/g, '');
   if (numericValue.length <= 2) return numericValue;
   if (numericValue.length <= 3) return `(${numericValue.slice(0, 2)}) ${numericValue.slice(2)}`;
-  if (numericValue.length <= 7) return `(${numericValue.slice(0, 2)}) ${numericValue.slice(2, 3)} ${numericValue.slice(3)}`;
+  if (numericValue.length <= 7)
+    return `(${numericValue.slice(0, 2)}) ${numericValue.slice(2, 3)} ${numericValue.slice(3)}`;
   return `(${numericValue.slice(0, 2)}) ${numericValue.slice(2, 3)} ${numericValue.slice(3, 7)}-${numericValue.slice(7, 11)}`;
 };
 
@@ -44,7 +54,13 @@ const formatCEP = (value: string) => {
 };
 
 export default function AddProduct() {
-  const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm<FormData>({
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<FormData>({
     defaultValues: {
       title: '',
       description: '',
@@ -68,14 +84,15 @@ export default function AddProduct() {
 
   useEffect(() => {
     if (cep && cep.length === 9) {
-      axios.get(`https://viacep.com.br/ws/${cep.replace('-', '')}/json/`)
-        .then(response => {
+      axios
+        .get(`https://viacep.com.br/ws/${cep.replace('-', '')}/json/`)
+        .then((response) => {
           if (!response.data.erro) {
             setValue('street', response.data.logradouro);
             setValue('neighborhood', response.data.bairro);
           }
         })
-        .catch(error => console.error('Error fetching address:', error));
+        .catch((error) => console.error('Error fetching address:', error));
     }
   }, [cep, setValue]);
 
@@ -100,10 +117,12 @@ export default function AddProduct() {
   return (
     <>
       <Stack.Screen options={{ title: 'Adicionar Produto' }} />
-      <ScrollView className="flex-1 p-6 bg-gray-100">
-        <TouchableOpacity onPress={pickImage} className="w-full h-48 border-2 border-gray-300 rounded-lg justify-center items-center mb-4 bg-white">
+      <ScrollView className="flex-1 bg-gray-100 p-6">
+        <TouchableOpacity
+          onPress={pickImage}
+          className="mb-4 h-48 w-full items-center justify-center rounded-lg border-2 border-gray-300 bg-white">
           {image ? (
-            <Image source={{ uri: image }} className="w-full h-full rounded-lg" />
+            <Image source={{ uri: image }} className="h-full w-full rounded-lg" />
           ) : (
             <Text className="text-gray-500">Upload Product Image</Text>
           )}
@@ -111,13 +130,13 @@ export default function AddProduct() {
 
         <Controller
           control={control}
-          rules={{ 
+          rules={{
             required: 'Title is required',
-            minLength: { value: 3, message: 'Title must be at least 3 characters long' }
+            minLength: { value: 3, message: 'Title must be at least 3 characters long' },
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              className="border border-gray-300 rounded-md p-2 mb-2 bg-white"
+              className="mb-2 rounded-md border border-gray-300 bg-white p-2"
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
@@ -126,17 +145,17 @@ export default function AddProduct() {
           )}
           name="title"
         />
-        {errors.title && <Text className="text-red-500 mb-2">{errors.title.message}</Text>}
+        {errors.title && <Text className="mb-2 text-red-500">{errors.title.message}</Text>}
 
         <Controller
           control={control}
-          rules={{ 
+          rules={{
             required: 'Description is required',
-            minLength: { value: 10, message: 'Description must be at least 10 characters long' }
+            minLength: { value: 10, message: 'Description must be at least 10 characters long' },
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              className="border border-gray-300 rounded-md p-2 mb-2 bg-white"
+              className="mb-2 rounded-md border border-gray-300 bg-white p-2"
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
@@ -147,14 +166,16 @@ export default function AddProduct() {
           )}
           name="description"
         />
-        {errors.description && <Text className="text-red-500 mb-2">{errors.description.message}</Text>}
+        {errors.description && (
+          <Text className="mb-2 text-red-500">{errors.description.message}</Text>
+        )}
 
         <Controller
           control={control}
           rules={{ required: 'Price is required' }}
           render={({ field: { onChange, value } }) => (
             <TextInput
-              className="border border-gray-300 rounded-md p-2 mb-2 bg-white"
+              className="mb-2 rounded-md border border-gray-300 bg-white p-2"
               onChangeText={(text) => onChange(formatCurrency(text))}
               value={value}
               placeholder="Preço"
@@ -163,12 +184,12 @@ export default function AddProduct() {
           )}
           name="price"
         />
-        {errors.price && <Text className="text-red-500 mb-2">{errors.price.message}</Text>}
+        {errors.price && <Text className="mb-2 text-red-500">{errors.price.message}</Text>}
 
         <Controller
           control={control}
           render={({ field: { onChange, value } }) => (
-            <View className="flex-row items-center justify-between mb-2">
+            <View className="mb-2 flex-row items-center justify-between">
               <Text>Aceito Troca</Text>
               <Switch value={value} onValueChange={onChange} />
             </View>
@@ -178,13 +199,13 @@ export default function AddProduct() {
 
         <Controller
           control={control}
-          rules={{ 
+          rules={{
             required: 'WhatsApp number is required',
-            validate: (value) => value.length === 16 || 'Invalid WhatsApp number'
+            validate: (value) => value.length === 16 || 'Invalid WhatsApp number',
           }}
           render={({ field: { onChange, value } }) => (
             <TextInput
-              className="border border-gray-300 rounded-md p-2 mb-2 bg-white"
+              className="mb-2 rounded-md border border-gray-300 bg-white p-2"
               onChangeText={(text) => onChange(formatWhatsApp(text))}
               value={value}
               placeholder="WhatsApp"
@@ -193,12 +214,12 @@ export default function AddProduct() {
           )}
           name="whatsapp"
         />
-        {errors.whatsapp && <Text className="text-red-500 mb-2">{errors.whatsapp.message}</Text>}
+        {errors.whatsapp && <Text className="mb-2 text-red-500">{errors.whatsapp.message}</Text>}
 
         <Controller
           control={control}
           render={({ field: { onChange, value } }) => (
-            <View className="flex-row items-center justify-between mb-2">
+            <View className="mb-2 flex-row items-center justify-between">
               <Text>Horário de atendimento</Text>
               <Switch value={value} onValueChange={onChange} />
             </View>
@@ -209,13 +230,16 @@ export default function AddProduct() {
         {isService && (
           <Controller
             control={control}
-            rules={{ 
+            rules={{
               required: 'Working hours are required for services',
-              pattern: { value: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9] - ([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, message: 'Invalid format. Use HH:MM - HH:MM' }
+              pattern: {
+                value: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9] - ([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/,
+                message: 'Invalid format. Use HH:MM - HH:MM',
+              },
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                className="border border-gray-300 rounded-md p-2 mb-2 bg-white"
+                className="mb-2 rounded-md border border-gray-300 bg-white p-2"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -225,17 +249,19 @@ export default function AddProduct() {
             name="workingHours"
           />
         )}
-        {isService && errors.workingHours && <Text className="text-red-500 mb-2">{errors.workingHours.message}</Text>}
+        {isService && errors.workingHours && (
+          <Text className="mb-2 text-red-500">{errors.workingHours.message}</Text>
+        )}
 
         <Controller
           control={control}
-          rules={{ 
+          rules={{
             required: 'CEP is required',
-            pattern: { value: /^\d{5}-\d{3}$/, message: 'Invalid CEP format' }
+            pattern: { value: /^\d{5}-\d{3}$/, message: 'Invalid CEP format' },
           }}
           render={({ field: { onChange, value } }) => (
             <TextInput
-              className="border border-gray-300 rounded-md p-2 mb-2 bg-white"
+              className="mb-2 rounded-md border border-gray-300 bg-white p-2"
               onChangeText={(text) => onChange(formatCEP(text))}
               value={value}
               placeholder="CEP"
@@ -244,14 +270,14 @@ export default function AddProduct() {
           )}
           name="cep"
         />
-        {errors.cep && <Text className="text-red-500 mb-2">{errors.cep.message}</Text>}
+        {errors.cep && <Text className="mb-2 text-red-500">{errors.cep.message}</Text>}
 
         <Controller
           control={control}
           rules={{ required: 'Street is required' }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              className="border border-gray-300 rounded-md p-2 mb-2 bg-white"
+              className="mb-2 rounded-md border border-gray-300 bg-white p-2"
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
@@ -260,14 +286,14 @@ export default function AddProduct() {
           )}
           name="street"
         />
-        {errors.street && <Text className="text-red-500 mb-2">{errors.street.message}</Text>}
+        {errors.street && <Text className="mb-2 text-red-500">{errors.street.message}</Text>}
 
         <Controller
           control={control}
           rules={{ required: 'Neighborhood is required' }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              className="border border-gray-300 rounded-md p-2 mb-2 bg-white"
+              className="mb-2 rounded-md border border-gray-300 bg-white p-2"
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
@@ -276,14 +302,16 @@ export default function AddProduct() {
           )}
           name="neighborhood"
         />
-        {errors.neighborhood && <Text className="text-red-500 mb-2">{errors.neighborhood.message}</Text>}
+        {errors.neighborhood && (
+          <Text className="mb-2 text-red-500">{errors.neighborhood.message}</Text>
+        )}
 
         <Controller
           control={control}
           rules={{ required: 'Number is required' }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              className="border border-gray-300 rounded-md p-2 mb-2 bg-white"
+              className="mb-2 rounded-md border border-gray-300 bg-white p-2"
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
@@ -293,13 +321,13 @@ export default function AddProduct() {
           )}
           name="number"
         />
-        {errors.number && <Text className="text-red-500 mb-2">{errors.number.message}</Text>}
+        {errors.number && <Text className="mb-2 text-red-500">{errors.number.message}</Text>}
 
         <Controller
           control={control}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              className="border border-gray-300 rounded-md p-2 mb-2 bg-white"
+              className="mb-2 rounded-md border border-gray-300 bg-white p-2"
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
@@ -309,8 +337,10 @@ export default function AddProduct() {
           name="complement"
         />
 
-        <TouchableOpacity onPress={handleSubmit(onSubmit)} className="bg-green-500 p-4 rounded-md items-center mt-4">
-          <Text className="text-white font-bold">Adicionar Produto</Text>
+        <TouchableOpacity
+          onPress={handleSubmit(onSubmit)}
+          className="mt-4 items-center rounded-md bg-green-500 p-4">
+          <Text className="font-bold text-white">Adicionar Produto</Text>
         </TouchableOpacity>
       </ScrollView>
     </>
