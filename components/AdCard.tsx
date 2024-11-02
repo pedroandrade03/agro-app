@@ -24,7 +24,7 @@ export default function AdCard({ id, image, title, price, description }: AdCardP
         <View className="flex-1 p-4">
           <Text className="mb-1 text-xl font-bold">{title}</Text>
           <Text className="mb-1 text-xl font-semibold text-green-600">{price}</Text>
-          <Text className="text-gray-700" numberOfLines={3}>
+          <Text className="text-gray-700" numberOfLines={2}>
             {description}
           </Text>
         </View>

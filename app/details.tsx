@@ -1,41 +1,61 @@
 import { useRoute } from '@react-navigation/native';
 import React from 'react';
-import { View, Text, Image, Linking, ScrollView } from 'react-native';
+import { View, Text, Image, Linking, ScrollView, ActivityIndicator } from 'react-native';
+
 import { Button } from '~/components/Button';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { useFetchAdDetails } from '~/hooks/useFetchAdDetails';
 
 export default function DetailsScreen() {
   const route = useRoute();
   const { id } = route.params as { id: number };
-  const { title, price, image, description, latitude, longitude } = {
-    image: 'https://via.placeholder.com/300',
-    title: 'Caixa com 10 ovos caipiras',
-    price: 'R$ 8,00',
-    description:
-      'Ovos frescos de galinhas criadas soltas. Ideal para uma alimentação saudável e saborosa.',
-    latitude: '-23.5505', // Coordenadas de exemplo
-    longitude: '-46.6333',
-  };
+  const { adDetails, loading, error } = useFetchAdDetails(id);
 
   const handleWhatsApp = () => {
-    const message = `Olá! Tenho interesse no produto: ${title} pelo valor de ${price}.`;
+    if (!adDetails) return;
+    const message = `Olá! Tenho interesse no produto: ${adDetails.title} pelo valor de ${adDetails.price}.`;
     const url = `https://wa.me/5581999999999?text=${encodeURIComponent(message)}`;
     Linking.openURL(url);
   };
 
   const handleGoogleMaps = () => {
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
+    if (!adDetails) return;
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${adDetails.latitude},${adDetails.longitude}`;
     Linking.openURL(url);
   };
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#22c55e" />
+        <Text>Carregando detalhes...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Erro ao carregar os detalhes: {error}</Text>
+      </View>
+    );
+  }
+
+  if (!adDetails) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Nenhum detalhe disponível para esse anúncio.</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1 }} className="bg-white">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <Image source={{ uri: image }} style={{ height: 300, width: '100%' }} />
+        <Image source={{ uri: adDetails.image }} style={{ height: 300, width: '100%' }} />
         <View style={{ padding: 16 }}>
-          <Text className="mb-2 text-4xl font-bold text-black">{title}</Text>
-          <Text className="mb-3 text-2xl font-semibold text-green-600">{price}</Text>
-          <Text className="mb-4 text-xl text-gray-700">{description}</Text>
+          <Text className="mb-2 text-4xl font-bold text-black">{adDetails.title}</Text>
+          <Text className="mb-3 text-2xl font-semibold text-green-600">{adDetails.price}</Text>
+          <Text className="mb-4 text-xl text-gray-700">{adDetails.description}</Text>
 
           <Button
             title="Chamar no Zap!"
