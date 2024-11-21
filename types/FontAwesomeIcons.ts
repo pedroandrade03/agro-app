@@ -1,0 +1,1 @@
+export type FontAwesomeIcons = 'whatsapp' | 'map-marker' | 'sign-in' | 'user-plus' | 'arrow-left' | 'lock';
