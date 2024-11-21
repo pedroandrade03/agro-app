@@ -8,8 +8,8 @@ interface Product {
 
 const ProfilePage = () => {
   const user = {
-    username: 'usuario124',
-    email: 'enzo@gmail.com',
+    username: 'pedroandrade015',
+    email: 'pedroandrade@gmail.com',
     profileImage: 'https://placehold.co/200x200',
     products: [
       { id: '1', title: 'Produto 1', price: 'R$ 50,00' },

@@ -1,6 +1,5 @@
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
-import { Stack } from 'expo-router';
 import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
@@ -13,6 +12,7 @@ import {
   Alert,
   Switch,
 } from 'react-native';
+import { useSubmitProduct } from '~/hooks/useSubmitProduct';
 
 type FormData = {
   title: string;
@@ -69,15 +69,21 @@ export default function AddProduct() {
       whatsapp: '',
       isService: false,
       workingHours: '',
-      cep: '',
-      street: '',
-      neighborhood: '',
-      number: '',
-      complement: '',
+      // cep: '',
+      // street: '',
+      // neighborhood: '',
+      // number: '',
+      // complement: '',
     },
     mode: 'onChange',
   });
   const [image, setImage] = useState<string | null>(null);
+  const { handleSubmit: submitProductForm, isLoading } = useSubmitProduct();
+
+  const onSubmit = (data: FormData) => {
+    console.log(data);
+    submitProductForm(data);
+  };
 
   const isService = watch('isService');
   const cep = watch('cep');
@@ -109,11 +115,6 @@ export default function AddProduct() {
     }
   };
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    Alert.alert('Success', 'Product added successfully!');
-  };
-
   return (
     <>
       <ScrollView className="flex-1 bg-gray-100 p-6">
@@ -123,7 +124,8 @@ export default function AddProduct() {
           {image ? (
             <Image source={{ uri: image }} className="h-full w-full rounded-lg" />
           ) : (
-            <Text className="text-gray-500">Upload Product Image</Text>
+            // Portugues
+            <Text className="text-gray-500">Enviar Imagem do Produto</Text>
           )}
         </TouchableOpacity>
 
@@ -338,8 +340,11 @@ export default function AddProduct() {
 
         <TouchableOpacity
           onPress={handleSubmit(onSubmit)}
-          className="mt-4 items-center rounded-md bg-green-500 p-4">
-          <Text className="font-bold text-white">Adicionar Produto</Text>
+          className="mt-4 items-center rounded-md bg-green-500 p-4"
+          disabled={isLoading}>
+          <Text className="font-bold text-white">
+            {isLoading ? 'Enviando...' : 'Adicionar Produto'}
+          </Text>
         </TouchableOpacity>
       </ScrollView>
     </>
